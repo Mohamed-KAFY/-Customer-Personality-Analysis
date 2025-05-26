@@ -1,38 +1,46 @@
-rm(list = ls(all.names = T))
-#----------------------------------------
-## Cleaning The income
-Income = read.csv(file.choose())
-View(Income)
-anyNA(Income)
-boxplot(Income)$out
-summary(Income)
-------------------------------------
-Income
-attach(Income)
-Y
-anyNA(Y)
-mean(Y,na.rm = T)
+# Remove all existing objects from the environment
+rm(list = ls(all.names = TRUE))
+
+# ----------------------------------------
+# Load Income Data
+Income <- read.csv(file.choose())   # Choose file manually
+View(Income)                        # View the dataset
+anyNA(Income)                       # Check for missing values
+boxplot(Income)$out                # Display outliers
+summary(Income)                     # Summary statistics
+
+# ----------------------------------------
+# Working with the Income Column (Y)
+attach(Income)                      # Attach data frame
+anyNA(Y)                            # Check for missing values in Y
+mean(Y, na.rm = TRUE)              # Calculate mean excluding NAs
 summary(Y)
-#---------------------------------------------
-library("Hmisc")
-c = impute(Y,median)
-c
+
+# ----------------------------------------
+# Impute missing values in Y using the median
+library(Hmisc)
+c <- impute(Y, median)             # Impute NA with median
 summary(c)
 boxplot(c)$out
 anyNA(c)
-#---------------------------------------------
 
-lower=median(c)-1.5* IQR(c);lower
-upper=median(c)+1.5* IQR(c);upper
-c1 = c
-c1[c>upper]=NA
-c1[c<lower]=NA
-c1
+# ----------------------------------------
+# Detect and remove outliers
+lower <- median(c) - 1.5 * IQR(c)  # Lower threshold
+upper <- median(c) + 1.5 * IQR(c)  # Upper threshold
+
+# Replace outliers with NA
+c1 <- c
+c1[c > upper] <- NA
+c1[c < lower] <- NA
 summary(c1)
 boxplot(c1)$out
-c2 <- impute(c1,median)
-c2
+
+# Re-impute the outlier NAs with the median
+c2 <- impute(c1, median)
 summary(c2)
 boxplot(c2)$out
-#--------------------------------------
-write.csv(c2,"new_income.csv")
+
+# ----------------------------------------
+# Save the cleaned income data to a new CSV file
+write.csv(c2, "new_income.csv", row.names = FALSE)
