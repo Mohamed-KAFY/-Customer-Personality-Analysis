@@ -1,4 +1,3 @@
-USE BikeStores
 ---------------------------------------
 /*1. Customer Segmentation & Spending Behavior
 1) Who are the highest spending customers?*/
